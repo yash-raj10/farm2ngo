@@ -2,6 +2,8 @@
 import { useUser, withPageAuthRequired } from "@auth0/nextjs-auth0/client";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { GiClick } from "react-icons/gi";
+import { MdAccountBox } from "react-icons/md";
 
 export default function Navbar() {
   const { user, isLoading } = useUser();
@@ -118,6 +120,7 @@ export default function Navbar() {
             <div className="w-full pt-1 relative">
               <input
                 {...register("mail")}
+                defaultValue={user.email}
                 placeholder=" "
                 type="text"
                 className={` peer  w-full p-5  font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
@@ -161,7 +164,106 @@ export default function Navbar() {
   };
 
   const Ngo = () => {
-    return;
+    return (
+      <>
+        <div className="  w-full ">
+          <div className="flex-col mx-8">
+            <div className="w-full  relative  ">
+              <input
+                {...register("name")}
+                placeholder=" "
+                className={` peer  w-full p-5  font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
+              />
+              <label
+                className={`absolute text-base duration-150 transform -translate-y-3 top-5 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 text-zinc-400 `}
+              >
+                NGO Name
+              </label>
+            </div>
+
+            <div className="w-full  relative pt-1">
+              <input
+                {...register("add1")}
+                placeholder=" "
+                className={` peer  w-full p-5  font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
+              />
+              <label
+                className={`absolute text-base duration-150 transform -translate-y-3 top-5 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 text-zinc-400 `}
+              >
+                Address :- (Country, State)
+              </label>
+            </div>
+
+            <div className="w-full  relative pt-1">
+              <input
+                {...register("add2")}
+                placeholder=" "
+                className={` peer  w-full p-5  font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
+              />
+              <label
+                className={`absolute text-base duration-150 transform -translate-y-3 top-5 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 text-zinc-400 `}
+              >
+                (City, Street, Pin, etc)
+              </label>
+            </div>
+
+            <div className="w-full  relative pt-1">
+              <input
+                {...register("about")}
+                placeholder=" "
+                className={` peer  w-full p-5  font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
+              />
+              <label
+                className={`absolute text-base duration-150 transform -translate-y-3 top-5 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 text-zinc-400 `}
+              >
+                Description (Which niche it is working on)
+              </label>
+            </div>
+
+            <div className="w-full pt-1 relative">
+              <input
+                {...register("mail")}
+                // defaultValue={user.email}
+                placeholder=" "
+                type="text"
+                className={` peer  w-full p-5  font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
+              />
+              <label
+                className={`absolute text-base duration-150 transform -translate-y-3 top-5 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 text-zinc-400 `}
+              >
+                Mail
+              </label>
+            </div>
+
+            <div className="w-full pt-1  relative">
+              <input
+                {...register("phone")}
+                placeholder=" "
+                className={` peer  w-full p-5  font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
+              />
+              <label
+                className={`absolute text-base duration-150 transform -translate-y-3 top-5 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 text-zinc-400 `}
+              >
+                Phone
+              </label>
+            </div>
+
+            <div className="w-full pt-1  relative">
+              <input
+                {...register("website/social")}
+                placeholder=" "
+                className={` peer  w-full p-5  font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
+              />
+              <label
+                className={`absolute text-base duration-150 transform -translate-y-3 top-5 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 text-zinc-400 `}
+              >
+                Website / Any social link
+              </label>
+            </div>
+          </div>
+        </div>
+      </>
+    );
   };
 
   const EditProfile = () => {
@@ -169,14 +271,23 @@ export default function Navbar() {
       <>
         <div className="mw  fixed left-0 right-0 bottom-0 top-0 backdrop-blur "></div>
         <div className="mc fixed  left-1/2 right-0 bottom-0 top-16 border  rounded-3xl p-6 bg-slate-300 text-center">
-          <h2 className="font-bold text-3xl p-4">Edit Profile</h2>
+          <h2 className="font-bold text-3xl p-4">
+            <span className="flex justify-center items-center gap-1">
+              {" "}
+              <MdAccountBox size={40} />
+              Edit Profile
+            </span>
+          </h2>
+
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex gap-2 justify-center">
               <div
                 className="border-2 p-2 rounded-xl bg-purple-400"
                 onClick={() => fetchLocation()}
               >
-                Get Live Location
+                <span className="flex gap-2">
+                  Get Live Location <GiClick size={24} />
+                </span>
               </div>
 
               <div>
