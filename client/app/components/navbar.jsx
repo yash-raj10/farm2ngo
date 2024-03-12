@@ -60,7 +60,12 @@ export default function Navbar() {
     );
   };
 
-  const Farmer = () => {
+  const ass = () => {
+    return user.email;
+  };
+  // let emaill = ass();
+
+  const Farmer = ({ emaill }) => {
     return (
       <>
         <div className="  w-full ">
@@ -120,7 +125,7 @@ export default function Navbar() {
             <div className="w-full pt-1 relative">
               <input
                 {...register("mail")}
-                defaultValue={user.email}
+                defaultValue={emaill}
                 placeholder=" "
                 type="text"
                 className={` peer  w-full p-5  font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
@@ -148,6 +153,7 @@ export default function Navbar() {
             <div className="w-full pt-1  relative">
               <input
                 {...register("website/social")}
+                defaultValue={user.name}
                 placeholder=" "
                 className={` peer  w-full p-5  font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
               />
@@ -223,7 +229,6 @@ export default function Navbar() {
             <div className="w-full pt-1 relative">
               <input
                 {...register("mail")}
-                // defaultValue={user.email}
                 placeholder=" "
                 type="text"
                 className={` peer  w-full p-5  font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
@@ -231,7 +236,7 @@ export default function Navbar() {
               <label
                 className={`absolute text-base duration-150 transform -translate-y-3 top-5 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 text-zinc-400 `}
               >
-                Mail
+                Mail ID
               </label>
             </div>
 
@@ -266,7 +271,7 @@ export default function Navbar() {
     );
   };
 
-  const EditProfile = () => {
+  const EditProfile = ({ emaill }) => {
     return (
       <>
         <div className="mw  fixed left-0 right-0 bottom-0 top-0 backdrop-blur "></div>
@@ -346,7 +351,7 @@ export default function Navbar() {
               </div>
             </div>
 
-            {profile == "farmer" && <Farmer />}
+            {profile == "farmer" && <Farmer emaill={emaill} />}
             {profile == "ngo" && <Ngo />}
 
             <button
@@ -421,7 +426,7 @@ export default function Navbar() {
           </p>
         )}
 
-        {showModal && <EditProfile />}
+        {showModal && <EditProfile emaill={user.email} />}
       </div>
     </>
   );
