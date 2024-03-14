@@ -15,7 +15,7 @@ func main(){
 	r := mux.NewRouter()
 
 	r.HandleFunc("/api/profiles", controllers.GetAllProfiles).Methods("GET")
-	r.HandleFunc("/api/profile/{id}", controllers.GetOneProfile).Methods("GET")
+	r.HandleFunc("/api/profile/{userEmail}", controllers.GetOneProfile).Methods("GET")
 	r.HandleFunc("/api/addProfile", controllers.AddProfile).Methods("POST")
 
 	cors := handlers.CORS(

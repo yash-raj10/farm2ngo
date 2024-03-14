@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/yash-raj10/farm2ngo-Backend/models"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -66,35 +66,45 @@ func getAllProfile() []bson.M {
 
 }
 
-func getOneProfile( profileID string) bson.M {
-	id, _ := primitive.ObjectIDFromHex(profileID)
+func getOneProfile( userEmail string) (bson.M, error) {
+	
 	
 	var profile bson.M
-	err := collection.FindOne(context.Background(), bson.M{"_id": id}).Decode(&profile)
+	err := collection.FindOne(context.Background(), bson.M{"mail": userEmail}).Decode(&profile)
     if err != nil {
-        log.Fatal(err)
+		return nil, err
     }
 	
-	return profile
+	return profile, err
 
 }
 
 
 //Real Once
+func GetOneProfile(w http.ResponseWriter, r *http.Request){
+	w.Header().Set("Content-Type", "application/json")
+
+	params := mux.Vars(r)
+	email := strings.ToLower(params["userEmail"])
+
+	singleProfile, err := getOneProfile(email)
+	if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+
+	if singleProfile == nil {
+        http.Error(w, "Profile not found", http.StatusNotFound)
+        return
+    }
+
+	json.NewEncoder(w).Encode(singleProfile)
+}
+
 func GetAllProfiles(w http.ResponseWriter, r *http.Request){
 	w.Header().Set("Content-Type", "application/json")
 	allProfiles := getAllProfile()
 	json.NewEncoder(w).Encode(allProfiles)
-}
-
-func GetOneProfile(w http.ResponseWriter, r *http.Request){
-	w.Header().Set("Content-Type", "application/json")
-
-
-	params := mux.Vars(r)
-	singleProfile := getOneProfile(params["id"])
-	json.NewEncoder(w).Encode(singleProfile)
-
 }
 
 
