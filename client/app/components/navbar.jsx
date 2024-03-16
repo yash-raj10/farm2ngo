@@ -1,10 +1,11 @@
 "use client";
 import { useUser, withPageAuthRequired } from "@auth0/nextjs-auth0/client";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GiClick } from "react-icons/gi";
 import { MdAccountBox } from "react-icons/md";
 import { useForm } from "react-hook-form";
+import { AddGrains } from "./model/addGrains";
 
 export default function Navbar() {
   const { user, isLoading } = useUser();
@@ -14,6 +15,7 @@ export default function Navbar() {
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
   const [Data, setData] = useState();
+  const [showGrainsBtn, setShowGrainsBtn] = useState(false);
 
   const { register, reset, handleSubmit } = useForm({
     defaultValues: {},
@@ -59,6 +61,31 @@ export default function Navbar() {
       console.log(`Data not Found`, error);
     }
   };
+
+  useEffect(() => {
+    const forGrains = async () => {
+      try {
+        if (!user) {
+          return console.log("wait");
+        }
+        const res = await axios.get(
+          `http://localhost:4000/api/profile/${user.email}`
+        );
+        console.log(res.data);
+
+        if (res.data.isa == "farmer") {
+          setShowGrainsBtn(true);
+          console.log("yesssss");
+        } else {
+          console.log("user is not a f");
+        }
+      } catch (error) {
+        console.log(`user is not a farmer`, error);
+      }
+    };
+
+    forGrains();
+  }, [user]);
 
   const fetchLocation = () => {
     return navigator.geolocation.getCurrentPosition(
@@ -210,6 +237,17 @@ export default function Navbar() {
                   className="input input-bordered w-24 md:w-auto"
                 />
               </div>
+              {showGrainsBtn && (
+                <button
+                  onClick={() =>
+                    document.getElementById("my_modal_3").showModal()
+                  }
+                  className="rounded-2xl py-3 px-4 border-2"
+                >
+                  Add Your Grains
+                </button>
+              )}
+
               <div className="dropdown dropdown-end">
                 <div
                   tabIndex={0}
@@ -244,6 +282,24 @@ export default function Navbar() {
             </div>
           </div>
         )}
+
+        <>
+          <dialog id="my_modal_3" className="modal">
+            <div className="modal-box">
+              <form method="dialog">
+                {/* if there is a button in form, it will close the modal */}
+                <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                  ✕
+                </button>
+              </form>
+              <h3 className="font-bold text-lg">Hello!</h3>
+              <p className="py-4">
+                Press ESC key or click on ✕ button to close
+              </p>{" "}
+              <AddGrains />
+            </div>
+          </dialog>
+        </>
 
         {!isLoading && !user && (
           <p>
@@ -358,6 +414,8 @@ export default function Navbar() {
         {/* ---------------------------------------------------------------------------------------------------------------------------------------- */}
         {showEditModal && (
           <>
+            {/* <addGrains /> */}
+
             <div className="mw  fixed left-0 right-0 bottom-0 top-0 backdrop-blur "></div>
             <div className="mc fixed  left-1/2 right-0 bottom-0 top-16 border  rounded-3xl p-6 bg-slate-300 text-center">
               <h2 className="font-bold text-3xl p-4">
