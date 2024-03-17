@@ -6,6 +6,10 @@ import { GiClick } from "react-icons/gi";
 import { MdAccountBox } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { AddGrains } from "./model/addGrains";
+import { CldUploadWidget } from "next-cloudinary";
+import React, { useCallback } from "react";
+import { TbPhotoPlus } from "react-icons/tb";
+import Image from "next/image";
 
 export default function Navbar() {
   const { user, isLoading } = useUser();
@@ -16,9 +20,12 @@ export default function Navbar() {
   const [longitude, setLongitude] = useState("");
   const [Data, setData] = useState();
   const [showGrainsBtn, setShowGrainsBtn] = useState(false);
+  const [farmerData, setFarmerData] = useState();
 
-  const { register, reset, handleSubmit } = useForm({
-    defaultValues: {},
+  const { register, reset, setValue, watch, handleSubmit } = useForm({
+    defaultValues: {
+      imageSrc: "",
+    },
   });
 
   const onSubmit = async (data) => {
@@ -75,6 +82,7 @@ export default function Navbar() {
 
         if (res.data.isa == "farmer") {
           setShowGrainsBtn(true);
+          setFarmerData(res.data);
           console.log("yesssss");
         } else {
           console.log("user is not a f");
@@ -83,7 +91,6 @@ export default function Navbar() {
         console.log(`user is not a farmer`, error);
       }
     };
-
     forGrains();
   }, [user]);
 
@@ -102,6 +109,24 @@ export default function Navbar() {
     );
   };
 
+  const setCustomValue = (id, value) => {
+    setValue(id, value, {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+  };
+
+  const onChange = (value) => {
+    setCustomValue("imageSrc", value);
+  };
+
+  const handleUpload = useCallback((result) => {
+    onChange(result.info.secure_url);
+  }, []);
+
+  let imageSrc = watch("imageSrc");
+
   function Fill({
     emaill,
     nameLabel,
@@ -116,13 +141,46 @@ export default function Navbar() {
     return (
       <>
         <div className="  w-full ">
-          <div className="flex-col mx-8">
+          <div className="flex-col ">
+            <div className="w-full  flex items-center justify-center my-4 ">
+              <div className="  w-2/3  ">
+                <CldUploadWidget
+                  onUpload={handleUpload}
+                  uploadPreset="jifxbwzs"
+                  options={{ maxFiles: 1 }}
+                >
+                  {({ open }) => {
+                    return (
+                      <div
+                        onClick={() => open?.()}
+                        className="  relative cursor-pointer hover:opacity-70 transition border-dashed border-2 p-12 border-neutral flex flex-col justify-center items-center gap-1 text-neutral-600"
+                        // style={{ zIndex: "20" }}
+                      >
+                        <TbPhotoPlus size={24} />
+
+                        {imageSrc && (
+                          <div className="absolute inset-0 w-full h-full ">
+                            <Image
+                              alt="Upload"
+                              fill
+                              style={{ objectFit: "cover" }}
+                              src={imageSrc}
+                            ></Image>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }}
+                </CldUploadWidget>
+              </div>
+            </div>
+
             <div className="w-full  relative  ">
               <input
                 {...register("name")}
                 defaultValue={name}
                 placeholder=" "
-                className={` peer  w-full p-5  font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
+                className={` peer  w-full p-5 pb-4  font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
               />
               <label
                 className={`absolute text-base duration-150 transform -translate-y-3 top-5 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 text-zinc-400 `}
@@ -136,7 +194,7 @@ export default function Navbar() {
                 {...register("add1")}
                 defaultValue={add1}
                 placeholder=" "
-                className={` peer  w-full p-5  font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
+                className={` peer  w-full p-5 pb-4 font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
               />
               <label
                 className={`absolute text-base duration-150 transform -translate-y-3 top-5 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 text-zinc-400 `}
@@ -150,7 +208,7 @@ export default function Navbar() {
                 {...register("add2")}
                 defaultValue={add2}
                 placeholder=" "
-                className={` peer  w-full p-5  font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
+                className={` peer  w-full p-5 pb-4 font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
               />
               <label
                 className={`absolute text-base duration-150 transform -translate-y-3 top-5 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 text-zinc-400 `}
@@ -164,7 +222,7 @@ export default function Navbar() {
                 {...register("about")}
                 defaultValue={about}
                 placeholder=" "
-                className={` peer  w-full p-5  font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
+                className={` peer  w-full p-5 pb-4 font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
               />
               <label
                 className={`absolute text-base duration-150 transform -translate-y-3 top-5 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 text-zinc-400 `}
@@ -179,7 +237,7 @@ export default function Navbar() {
                 defaultValue={emaill}
                 placeholder=" "
                 type="text"
-                className={` peer  w-full p-5  font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
+                className={` peer  w-full p-5 pb-4 font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
               />
               <label
                 className={`absolute text-base duration-150 transform -translate-y-3 top-5 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 text-zinc-400 `}
@@ -193,7 +251,7 @@ export default function Navbar() {
                 {...register("phone")}
                 defaultValue={phone}
                 placeholder=" "
-                className={` peer  w-full p-5  font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
+                className={` peer  w-full p-5 pb-4 font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
               />
               <label
                 className={`absolute text-base duration-150 transform -translate-y-3 top-5 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 text-zinc-400 `}
@@ -207,7 +265,7 @@ export default function Navbar() {
                 {...register("website/social")}
                 defaultValue={website}
                 placeholder=" "
-                className={` peer  w-full p-5  font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
+                className={` peer  w-full p-5 pb-4 font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
               />
               <label
                 className={`absolute text-base duration-150 transform -translate-y-3 top-5 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 text-zinc-400 `}
@@ -225,11 +283,12 @@ export default function Navbar() {
     <>
       <div className="bg-white text-black">
         {user && (
-          <div className="navbar bg-base-100">
-            <div className="flex-1">
-              <a className="btn btn-neutral text-xl">daisyUI</a>
-            </div>
-            <div className="flex-none gap-2">
+          <div className="navbar bg-base-100 gap-2   shadow-md border">
+            <div className="w-full flex justify-between">
+              <div className="">
+                <a className="btn btn-neutral text-xl bg-zinc-600">Farm2Ngo</a>
+              </div>
+
               <div className="form-control">
                 <input
                   type="text"
@@ -237,6 +296,7 @@ export default function Navbar() {
                   className="input input-bordered w-24 md:w-auto"
                 />
               </div>
+
               {showGrainsBtn && (
                 <button
                   onClick={() =>
@@ -247,58 +307,68 @@ export default function Navbar() {
                   Add Your Grains
                 </button>
               )}
+            </div>
 
-              <div className="dropdown dropdown-end">
-                <div
-                  tabIndex={0}
-                  role="button"
-                  className="btn btn-ghost btn-circle avatar"
-                >
-                  <div className="w-10 rounded-full">
-                    <img
-                      alt="Tailwind CSS Navbar component"
-                      src={user.picture}
-                    />
-                  </div>
+            <div className="dropdown dropdown-end">
+              <div
+                tabIndex={0}
+                role="button"
+                className="btn btn-ghost btn-circle avatar"
+              >
+                <div className="w-10 rounded-full">
+                  <img alt="Tailwind CSS Navbar component" src={user.picture} />
                 </div>
-                <ul
-                  tabIndex={0}
-                  className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 text-black rounded-box w-52"
-                >
-                  <li>
-                    <a className="justify-between" onClick={open}>
-                      Profile
-                      <span className="badge">New</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a>Settings</a>
-                  </li>
-                  <li>
-                    <a>Logout</a>
-                  </li>
-                </ul>
               </div>
+              <ul
+                tabIndex={0}
+                className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 text-black rounded-box w-52"
+              >
+                <li>
+                  <a className="justify-between" onClick={open}>
+                    Profile
+                    <span className="badge">New</span>
+                  </a>
+                </li>
+                <li>
+                  <a>Settings</a>
+                </li>
+                <li>
+                  <a>Logout</a>
+                </li>
+              </ul>
             </div>
           </div>
         )}
 
         <>
-          <dialog id="my_modal_3" className="modal">
-            <div className="modal-box">
-              <form method="dialog">
-                {/* if there is a button in form, it will close the modal */}
-                <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-                  ✕
-                </button>
-              </form>
-              <h3 className="font-bold text-lg">Hello!</h3>
-              <p className="py-4">
-                Press ESC key or click on ✕ button to close
-              </p>{" "}
-              <AddGrains />
-            </div>
-          </dialog>
+          <div
+          // className="-z-50"
+          >
+            <dialog id="my_modal_3" className="  modal ">
+              <div className="modal-box ">
+                <form method="dialog">
+                  <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                    ✕
+                  </button>
+                </form>
+                <h3 className="font-bold text-lg text-center">
+                  Add your grains!
+                </h3>
+                <p className="py-4">
+                  Please Provide a detailed Description about the Excess Crops
+                  left.
+                </p>{" "}
+                {farmerData && (
+                  <AddGrains
+                    add1={farmerData.add1}
+                    name={farmerData.name}
+                    mail={farmerData.mail}
+                    phone={farmerData.phone}
+                  />
+                )}
+              </div>
+            </dialog>
+          </div>
         </>
 
         {!isLoading && !user && (
@@ -311,16 +381,16 @@ export default function Navbar() {
           <>
             <div className="mw  fixed left-0 right-0 bottom-0 top-0 backdrop-blur "></div>
             <div className="mc fixed  left-1/2 right-0 bottom-0 top-16 border  rounded-3xl p-6 bg-slate-300 text-center">
-              <h2 className="font-bold text-3xl p-4">
+              <h2 className="font-bold text-3xl p-4 pb-2">
                 <span className="flex justify-center items-center gap-1">
                   {" "}
-                  <MdAccountBox size={40} />
+                  <MdAccountBox size={36} />
                   Compleat Profile
                 </span>
               </h2>
 
               <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="flex gap-2 justify-center">
+                <div className="flex  justify-center">
                   <div
                     className="border-2 p-2 rounded-xl bg-purple-400"
                     onClick={() => fetchLocation()}
@@ -361,7 +431,7 @@ export default function Navbar() {
                 </div>
 
                 <div>
-                  <div className="join gap-1 p-6">
+                  <div className="join gap-1 pt-2">
                     <input
                       onClick={() => setProfile("farmer")}
                       className="join-item btn btn-square p-2 w-20"
@@ -418,7 +488,7 @@ export default function Navbar() {
 
             <div className="mw  fixed left-0 right-0 bottom-0 top-0 backdrop-blur "></div>
             <div className="mc fixed  left-1/2 right-0 bottom-0 top-16 border  rounded-3xl p-6 bg-slate-300 text-center">
-              <h2 className="font-bold text-3xl p-4">
+              <h2 className="font-bold text-3xl p-2">
                 <span className="flex justify-center items-center gap-1">
                   {" "}
                   <MdAccountBox size={40} />
@@ -427,12 +497,25 @@ export default function Navbar() {
               </h2>
 
               <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="flex gap-2 justify-center">
+                <div className="flex gap-2  justify-center">
+                  <div className="text-base text-white">
+                    <input
+                      className=" rounded-xl  text-center p-2 bg-violet-500 w-20"
+                      type="text"
+                      defaultValue={Data.isa}
+                      name="options"
+                      value={Data.isa}
+                      aria-label={Data.isa}
+                      id={Data.isa}
+                      {...register("isA")}
+                    />
+                  </div>
+
                   <div
                     className="border-2 p-2 rounded-xl bg-purple-400"
                     onClick={() => fetchLocation()}
                   >
-                    <span className="flex gap-2">
+                    <span className="flex gap-2 text-sm">
                       Get Live Location <GiClick size={24} />
                     </span>
                   </div>
@@ -464,21 +547,6 @@ export default function Navbar() {
                         {longitude}
                       </div>
                     )}
-                  </div>
-                </div>
-
-                <div>
-                  <div className="join gap-1 p-6">
-                    <input
-                      className="join-item btn btn-circle p-2 bg-violet-500 w-20"
-                      type="text"
-                      defaultValue={Data.isa}
-                      name="options"
-                      value={Data.isa}
-                      aria-label={Data.isa}
-                      id={Data.isa}
-                      {...register("isA")}
-                    />
                   </div>
                 </div>
 
