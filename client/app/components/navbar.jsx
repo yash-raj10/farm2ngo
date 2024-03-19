@@ -364,6 +364,7 @@ export default function Navbar() {
                     name={farmerData.name}
                     mail={farmerData.mail}
                     phone={farmerData.phone}
+                    social={farmerData.website}
                   />
                 )}
               </div>
@@ -380,8 +381,18 @@ export default function Navbar() {
         {showCompleatModal && (
           <>
             <div className="mw  fixed left-0 right-0 bottom-0 top-0 backdrop-blur "></div>
-            <div className="mc fixed  left-1/2 right-0 bottom-0 top-16 border  rounded-3xl p-6 bg-slate-300 text-center">
-              <h2 className="font-bold text-3xl p-4 pb-2">
+            <div className="mc fixed  left-1/2 right-0 bottom-0 top-16 border  rounded-3xl px-6 bg-slate-300 text-center">
+              <div className="w-full mt-1  text-right">
+                {" "}
+                <button
+                  onClick={() => setShowCompleatModal(false)}
+                  className="text-lg font-bold"
+                >
+                  X
+                </button>
+              </div>
+
+              <h2 className="font-bold text-3xl p-2 pt-0 mt-0">
                 <span className="flex justify-center items-center gap-1">
                   {" "}
                   <MdAccountBox size={36} />
@@ -487,15 +498,23 @@ export default function Navbar() {
             {/* <addGrains /> */}
 
             <div className="mw  fixed left-0 right-0 bottom-0 top-0 backdrop-blur "></div>
-            <div className="mc fixed  left-1/2 right-0 bottom-0 top-16 border  rounded-3xl p-6 bg-slate-300 text-center">
-              <h2 className="font-bold text-3xl p-2">
+            <div className="mc fixed  left-1/2 right-0 bottom-0 top-16 border  rounded-3xl px-6 bg-slate-300 text-center">
+              <div className="w-full mt-1  text-right">
+                {" "}
+                <button
+                  onClick={() => setEditShowModal(false)}
+                  className="text-lg font-bold"
+                >
+                  X
+                </button>
+              </div>
+              <h2 className="font-bold text-3xl p-2 pt-0 mt-0">
                 <span className="flex justify-center items-center gap-1">
                   {" "}
                   <MdAccountBox size={40} />
                   Edit Profile
                 </span>
               </h2>
-
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex gap-2  justify-center">
                   <div className="text-base text-white">

@@ -7,7 +7,7 @@ import React, { useCallback } from "react";
 import { TbPhotoPlus } from "react-icons/tb";
 import Image from "next/image";
 
-export const AddGrains = ({ add1, name, mail, phone }) => {
+export const AddGrains = ({ add1, name, mail, phone, social }) => {
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
 
@@ -129,7 +129,7 @@ export const AddGrains = ({ add1, name, mail, phone }) => {
                       >
                         <TbPhotoPlus size={30} />
                         <div className="font-semibold text-sm">
-                          Click to Upload Crop Picture
+                          Click to Upload Crops Picture
                         </div>
                         {imageSrc && (
                           <div className="absolute inset-0 w-full h-full ">
@@ -230,6 +230,15 @@ export const AddGrains = ({ add1, name, mail, phone }) => {
                 type=""
                 defaultValue={phone}
                 {...register("phone")}
+              />
+            </div>
+
+            <div className="">
+              <input
+                className="hidden"
+                type=""
+                defaultValue={social}
+                {...register("website")}
               />
             </div>
           </div>

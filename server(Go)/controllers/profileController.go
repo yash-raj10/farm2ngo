@@ -18,6 +18,7 @@ import (
 const Link = "mongodb+srv://yashrajse:kQZFWGFkOHlnIopp@cluster1.jxx6eoc.mongodb.net/test"
 
 var collection *mongo.Collection
+var collection2 *mongo.Collection
 
 //mongoDB initialization
 func init(){
@@ -31,6 +32,7 @@ func init(){
 	fmt.Print("Connection Success\n")
 
 	collection = client.Database("farm2ngo").Collection("profiles")
+	collection2 = client.Database("farm2ngo").Collection("crops")
 	fmt.Print("Instance is Ready\n")
 }
 
@@ -67,7 +69,6 @@ func getAllProfile() []bson.M {
 }
 
 func getOneProfile( userEmail string) (bson.M, error) {
-	
 	
 	var profile bson.M
 	err := collection.FindOne(context.Background(), bson.M{"mail": userEmail}).Decode(&profile)
@@ -125,4 +126,142 @@ func AddProfile(w http.ResponseWriter, r *http.Request){
 	
 	addOneProfile(profile)
 	json.NewEncoder(w).Encode(profile)
+}
+
+
+func UpdateProfile(w http.ResponseWriter, r *http.Request){
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Allow-Control-Allow-Methods", "POST")
+
+	var UpdatedProfile models.Profile //getting from req
+	var ProfileDetails models.Profile // getting from db
+
+	params := mux.Vars(r)
+	email := strings.ToLower(params["userEmail"])
+
+	filter := bson.M{"mail":email}
+
+	err:=  collection.FindOne(context.Background(), filter).Decode(&ProfileDetails)
+	if err != nil{
+		http.Error(w, err.Error(), http.StatusBadRequest)
+        return
+	}
+
+	err1 := json.NewDecoder(r.Body).Decode(&UpdatedProfile)
+	if err1 != nil{
+		http.Error(w, err.Error(), http.StatusBadRequest)
+        return
+	}
+
+	if UpdatedProfile.About != ProfileDetails.About {
+		 ProfileDetails.About = UpdatedProfile.About
+		 update := bson.M{"$set": bson.M{"about": ProfileDetails.About}}
+
+		 _, err := collection.UpdateOne(context.Background(), filter, update )
+		 if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+		}
+	}
+
+	if UpdatedProfile.Name != ProfileDetails.Name {
+		ProfileDetails.Name = UpdatedProfile.Name
+		update := bson.M{"$set": bson.M{"name": ProfileDetails.Name}}
+
+		_, err := collection.UpdateOne(context.Background(), filter, update )
+		if err != nil {
+		   http.Error(w, err.Error(), http.StatusInternalServerError)
+	   return
+	   }
+    }
+
+   if UpdatedProfile.ImageSrc != ProfileDetails.ImageSrc {
+	ProfileDetails.ImageSrc = UpdatedProfile.ImageSrc
+	update := bson.M{"$set": bson.M{"imagesrc": ProfileDetails.ImageSrc}}
+
+	_, err := collection.UpdateOne(context.Background(), filter, update )
+	if err != nil {
+	   http.Error(w, err.Error(), http.StatusInternalServerError)
+   return
+   }
+}
+
+if UpdatedProfile.Website != ProfileDetails.Website {
+	ProfileDetails.Website = UpdatedProfile.Website
+	update := bson.M{"$set": bson.M{"website": ProfileDetails.Website}}
+
+	_, err := collection.UpdateOne(context.Background(), filter, update )
+	if err != nil {
+	   http.Error(w, err.Error(), http.StatusInternalServerError)
+   return
+   }
+}
+if UpdatedProfile.Lat != ProfileDetails.Lat {
+	ProfileDetails.Lat = UpdatedProfile.Lat
+	update := bson.M{"$set": bson.M{"lat": ProfileDetails.Lat}}
+
+	_, err := collection.UpdateOne(context.Background(), filter, update )
+	if err != nil {
+	   http.Error(w, err.Error(), http.StatusInternalServerError)
+   return
+   }
+}
+
+if UpdatedProfile.Lon != ProfileDetails.Lon  {
+	ProfileDetails.Lon  = UpdatedProfile.Lon 
+	update := bson.M{"$set": bson.M{"lon": ProfileDetails.Lon }}
+
+	_, err := collection.UpdateOne(context.Background(), filter, update )
+	if err != nil {
+	   http.Error(w, err.Error(), http.StatusInternalServerError)
+   return
+   }
+}
+
+if UpdatedProfile.Add1 != ProfileDetails.Add1 {
+	ProfileDetails.Add1 = UpdatedProfile.Add1
+	update := bson.M{"$set": bson.M{"add1": ProfileDetails.Add1}}
+
+	_, err := collection.UpdateOne(context.Background(), filter, update )
+	if err != nil {
+	   http.Error(w, err.Error(), http.StatusInternalServerError)
+   return
+   }
+}
+
+if UpdatedProfile.Add2 != ProfileDetails.Add2 {
+	ProfileDetails.Add2 = UpdatedProfile.Add2
+	update := bson.M{"$set": bson.M{"add2": ProfileDetails.Add2}}
+
+	_, err := collection.UpdateOne(context.Background(), filter, update )
+	if err != nil {
+	   http.Error(w, err.Error(), http.StatusInternalServerError)
+   return
+   }
+}
+
+if UpdatedProfile.Mail != ProfileDetails.Mail {
+	ProfileDetails.Mail = UpdatedProfile.Mail
+	update := bson.M{"$set": bson.M{"mail": ProfileDetails.Mail}}
+
+	_, err := collection.UpdateOne(context.Background(), filter, update )
+	if err != nil {
+	   http.Error(w, err.Error(), http.StatusInternalServerError)
+   return
+   }
+}
+
+if UpdatedProfile.Phone != ProfileDetails.Phone {
+	ProfileDetails.Phone = UpdatedProfile.Phone
+	update := bson.M{"$set": bson.M{"phone": ProfileDetails.Phone}}
+
+	_, err := collection.UpdateOne(context.Background(), filter, update )
+	if err != nil {
+	   http.Error(w, err.Error(), http.StatusInternalServerError)
+   return
+   }
+}
+
+json.NewEncoder(w).Encode(ProfileDetails)
+
 }

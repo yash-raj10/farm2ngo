@@ -6,8 +6,8 @@ type Profile struct {
 	ID primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
 	IsA    string        `json:"isA"`
 	Name   string        `json:"name"`
-	// ImageSrc string        `json:"imagesrc"`
-	Website   string        `json:"website/social"`
+	ImageSrc string        `json:"imageSrc"`
+	Website   string        `json:"website"`
 	Lat string        `json:"lat"`
 	Lon string        `json:"lon"`
 	Add1   string        `json:"add1"`

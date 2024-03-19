@@ -17,6 +17,11 @@ func main(){
 	r.HandleFunc("/api/profiles", controllers.GetAllProfiles).Methods("GET")
 	r.HandleFunc("/api/profile/{userEmail}", controllers.GetOneProfile).Methods("GET")
 	r.HandleFunc("/api/addProfile", controllers.AddProfile).Methods("POST")
+	r.HandleFunc("/api/profile/{userEmail}", controllers.UpdateProfile).Methods("PUT")
+	
+	r.HandleFunc("/api/addCrop", controllers.AddCrop).Methods("POST")
+	r.HandleFunc("/api/crops", controllers.GetAllCrops).Methods("GET")
+	r.HandleFunc("/api/crop/{id}", controllers.GetOneCrop).Methods("GET")
 
 	cors := handlers.CORS(
 		handlers.AllowedHeaders([]string{"Content-Type"}),
