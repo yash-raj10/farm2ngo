@@ -28,7 +28,7 @@ export default function Navbar() {
     },
   });
 
-  const onSubmit = async (data) => {
+  const onSubmitCompleat = async (data) => {
     try {
       const res = await axios.post(
         "http://localhost:4000/api/addProfile",
@@ -47,13 +47,26 @@ export default function Navbar() {
     }
   };
 
+  const onSubmitEdit = async (data) => {
+    try {
+      const res = await axios.put(
+        `http://localhost:4000/api/profile/${user.email}`,
+        data
+      );
+      console.log(user.email);
+    } finally {
+      console.log(data);
+      reset();
+      setEditShowModal(false);
+    }
+  };
+
   const open = async () => {
     try {
       const res = await axios.get(
         `http://localhost:4000/api/profile/${user.email}`
       );
       let x = res.data;
-
       console.log(x);
 
       if (res.data) {
@@ -137,6 +150,7 @@ export default function Navbar() {
     add2,
     about,
     phone,
+    image,
   }) {
     return (
       <>
@@ -262,7 +276,7 @@ export default function Navbar() {
 
             <div className="w-full pt-1  relative">
               <input
-                {...register("website/social")}
+                {...register("website")}
                 defaultValue={website}
                 placeholder=" "
                 className={` peer  w-full p-5 pb-4 font-light bg-white border-2 rounded-md outline-none transition  disabled:opacity-70 disabled:cursor-not-allowed pl-4 border-neutral-300 focus:border-black`}
@@ -400,7 +414,7 @@ export default function Navbar() {
                 </span>
               </h2>
 
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={handleSubmit(onSubmitCompleat)}>
                 <div className="flex  justify-center">
                   <div
                     className="border-2 p-2 rounded-xl bg-purple-400"
@@ -515,7 +529,7 @@ export default function Navbar() {
                   Edit Profile
                 </span>
               </h2>
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={handleSubmit(onSubmitEdit)}>
                 <div className="flex gap-2  justify-center">
                   <div className="text-base text-white">
                     <input
@@ -545,6 +559,7 @@ export default function Navbar() {
                         <input
                           className="hidden"
                           type=""
+                          defaultValue={Data.lat}
                           id={latitude}
                           value={latitude}
                           {...register("lat")}
@@ -558,6 +573,7 @@ export default function Navbar() {
                         <input
                           className="hidden"
                           type=""
+                          defaultValue={Data.lon}
                           id={longitude}
                           value={longitude}
                           {...register("lon")}
@@ -578,6 +594,7 @@ export default function Navbar() {
                     add2={Data.add2}
                     about={Data.about}
                     phone={Data.phone}
+                    image={Data.imageSrc}
                     nameLabel={"Farmer full Name"}
                     abtLabel={"About Farmer"}
                   />
@@ -591,6 +608,7 @@ export default function Navbar() {
                     add2={Data.add2}
                     about={Data.about}
                     phone={Data.phone}
+                    image={Data.imageSrc}
                     nameLabel={"NGO Name"}
                     abtLabel={" Description (Which niche it is working on)"}
                   />
